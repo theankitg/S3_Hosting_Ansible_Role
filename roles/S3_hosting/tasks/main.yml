@@ -1,0 +1,2 @@
+- name: "Include task: {{ task }}"
+  include: "{{ task }}.yml"

@@ -1,0 +1,32 @@
+- name: " creating build directory"
+  file: path={{item}} state=directory
+  with_items:
+    - .build/my_website
+
+- name: " setting working directory"
+  set_fact:
+    working_directory: ".build/my_website"
+
+- name: " generating build package name"
+  shell: echo "my_website_package.tar.gz"
+  register: build_package
+
+- name: " cleaning package directory"
+  file:
+    path: "{{ working_directory }}/{{ item.path }}"
+    state: "{{ item.state }}"
+  with_items:
+    - { path: 'my_website_package', state: 'absent' }
+    - { path: 'my_website_package', state: 'directory' }
+
+- name: " copying build to package directory"
+  shell:
+    rsync -a ../my-website/* {{ working_directory }}/my_website_package 
+  args:
+    creates: "{{ working_directory }}/my_website_package/dist"
+
+- name: " compressing build package: {{ build_package.stdout }}"
+  archive:
+    path: "{{ working_directory }}/my_website_package"
+    dest: "{{ working_directory }}/{{ build_package.stdout }}"
+    format: gz

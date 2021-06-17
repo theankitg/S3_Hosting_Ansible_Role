@@ -1,0 +1,9 @@
+- name: " delete website package directory: dashboard_package"
+  file:
+    path: "{{ working_directory }}/my_website_package"
+    state: absent
+
+- name: " delete LXP dashboard package artifact: {{ build_package.stdout }}"
+  file:
+    path: "{{ working_directory }}/{{ build_package.stdout }}"
+    state: absent

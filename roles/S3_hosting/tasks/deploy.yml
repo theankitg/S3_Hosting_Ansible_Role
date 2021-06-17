@@ -1,0 +1,19 @@
+- name: " deploy assets to website cdn origin: s3://{{ settings.bucket_name }}"
+  s3_sync:
+    aws_access_key: "{{ role.sts_creds.access_key }}"
+    aws_secret_key: "{{ role.sts_creds.secret_key }}"
+    security_token: "{{ role.sts_creds.session_token }}"
+    region: "{{ settings.region }}"
+    bucket: "{{ settings.bucket_name }}"
+    file_root: "{{ working_directory }}/my_website_package"
+    permission: public-read
+
+- name: " invalidate cdn cache:"
+  env_cf_invalidate:
+    aws_access_key: "{{ role.sts_creds.access_key }}"
+    aws_secret_key: "{{ role.sts_creds.secret_key }}"
+    security_token: "{{ role.sts_creds.session_token }}"
+    region: "{{ settings.region }}"
+    domain: "{{ settings.website.url }}"
+    paths:
+      - "/*"

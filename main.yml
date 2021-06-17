@@ -1,0 +1,32 @@
+---
+- name: "Generating AWS STS session token"
+  hosts: localhost
+  vars_files:
+    - roles/S3_Hosting/vars/main.yml
+  roles:
+    - role: "S3_Hosting"
+      task: "identity"
+
+- name: "Building website"
+  hosts: localhost
+  roles:
+    - role: S3_Hosting
+      task: "build"
+
+- name: "Clearing S3 bucket"
+  hosts: localhost
+  tasks:
+    - name: "aws remove objects"
+      shell: aws s3 rm s3://{{ settings.bucket_name }}/ --recursive
+
+- name: "Deploying website"
+  hosts: localhost
+  roles:
+    - role: S3_Hosting
+      task: "deploy"
+
+- name: "Cleaning up build artifacts"
+  hosts: localhost
+  roles:
+    - role: S3_Hosting
+      task: "clean"
