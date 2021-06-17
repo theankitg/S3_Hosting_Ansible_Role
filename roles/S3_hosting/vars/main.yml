@@ -1,0 +1,13 @@
+#Mention your IAM role arn and your bucket region here
+settings:
+  role_arn: " "
+  role_session_name: "ansible-s3-hosting"
+  region: " "
+
+  #Mention your bucket name here
+  bucket_name: ''
+
+  # mention your website url used in CDN here
+  Website:
+    url: ''
+    
