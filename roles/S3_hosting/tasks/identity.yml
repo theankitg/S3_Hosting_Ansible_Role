@@ -1,0 +1,10 @@
+- name: " assuming sts role"
+  sts_assume_role:
+    role_arn: "{{ settings.role_arn }}"
+    role_session_name: "{{ settings.role_session_name }}"
+    region: "{{ settings.region }}"
+  register: role
+
+- name: " getting current IP address"
+  ipify_facts:
+  register: my_ip
